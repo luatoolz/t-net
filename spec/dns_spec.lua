@@ -34,6 +34,7 @@ describe("dns", function()
     assert.equal(host('mx.yandex.ru'), dns('yandex.ru', 'mx')[1])
     assert.equal(host('mx.yandex.ru'), dns('yandex.ru', 'MX')[1])
     assert.is_nil(dns.mx('example.com'))
+    assert.equal(ip('46.175.8.47'), dns.a('lua.org')[1])
 
 --    assert.equal('сайт.рф', dns('яндекс.рф'))
 --    assert.equal('сайт.рф', tostring(dns('xxx.сайт.рф')))

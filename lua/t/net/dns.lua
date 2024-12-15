@@ -18,9 +18,9 @@ local host, ip, dns =
 local result = {
   A = ip,
   NS = host,
+  MX = host,
   CNAME = host,
   PTR = host,
-  MX = host,
 }
 local queryf = {
   PTR = function(x) if is.ip(x) then
