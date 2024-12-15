@@ -18,7 +18,7 @@ local tld, inet_ntoa, inet_aton, computed =
   pkg.inet_aton,
   mt.computed
 
-local domain, host, ip = {}, {}, {}
+local domain, host, ip, dns = {}, {}, {}, {}
 local function minus(i, n)
   if type(n)=='number' and n<0 and type(i)=='number' and i<0 then
     if (n+i)>0 then
@@ -31,7 +31,14 @@ local function pkgn(x, alt) return mt(x).__name or alt or 'unknown' end
 
 local tpl = {
 __concat=function(self, it)
-  if (not is.ip(self)) and #self>0 and type(it)=='string' and #it>0 then return host(append(sub(self), it, 1)) end
+  if (not is.ip(self)) and #self>0 then
+    if type(it)=='string' and #it>0 then return host(append(sub(self), it, 1)) end
+    if type(it)=='table' and #it>0 then
+      local rv=sub(self)
+      for _,v in ipairs(it) do append(rv, v, 1) end
+      return host(rv)
+    end
+  end
 end,
 __eq = function(a, b) return tostring(a)==tostring(b) end,
 __export = function(self) if #self>0 then return tostring(self) end end,
@@ -98,7 +105,7 @@ __tostring = tpl.__tostring,
 
 setmetatable(ip, {
 __call=function(self, it)
-  if mt(it)==mt(self) then return it end
+  if getmetatable(it)==getmetatable(self) then return it end
   if type(it)=='number' then it=inet_ntoa(it) end
   if type(it)=='table' and #it==4 and #(map(it, byte) or {})==4 then return setmetatable(it, getmetatable(self)) end
   it=getnetobject(self, it)
@@ -119,4 +126,5 @@ return {
   domain=domain,
   host=host,
   ip=ip,
+  dns=dns,
 }
