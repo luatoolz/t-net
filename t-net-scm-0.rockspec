@@ -21,6 +21,7 @@ dependencies = {
   "lua >= 5.1",
   "public_suffix_list",
   "t",
+  "luaresolver",
 }
 
 test_dependencies = {
