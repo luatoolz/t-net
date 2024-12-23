@@ -9,6 +9,15 @@ local Resolver, Parser =
 local recordTypes = Parser.recordTypes
 local save = table.save
 local nulled = table.nulled
+local to = t.to
+local env = t.env
+
+env({
+  NS = '1.1.1.1,1.0.0.1',
+  NS_TIMEOUT = 5,
+})
+
+local ns = env.NS:split(',', ' ', ';')
 
 local host, ip, dns =
   tpl.host,
@@ -28,7 +37,7 @@ local queryf = {
     return host(x) end,
 }
 
-local r=Resolver.new({'1.1.1.1','1.0.0.1'}, 5)
+local r=Resolver.new(ns, to.integer(env.NS_TIMEOUT))
 return setmetatable(dns, {
 __call=function(self, it, k)
   k=k and self[k]

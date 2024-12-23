@@ -19,6 +19,7 @@ local tld, inet_ntoa, inet_aton, computed =
   mt.computed
 
 local domain, host, ip, dns = {}, {}, {}, {}
+
 local function minus(i, n)
   if type(n)=='number' and n<0 and type(i)=='number' and i<0 then
     if (n+i)>0 then
@@ -97,7 +98,6 @@ __call=function(self, it)
 end,
 __computable = {
   tld     = function(self) return tld(self.domain) end,
-  ok      = function(self) return dns end,
   domain  = function(self) return domain(self) end,
   ip      = function(self) return self.a end,
   a       = function(self) return dns.a(self) end,
