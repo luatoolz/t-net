@@ -25,6 +25,7 @@ dependencies = {
   "t-utf8",
   "luaresolver",
   "idn2",
+  "net-url",
 }
 
 test_dependencies = {
