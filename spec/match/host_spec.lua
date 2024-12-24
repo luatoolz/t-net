@@ -3,16 +3,16 @@ describe("match.host", function()
 	setup(function()
     t = require "t"
     is = t.is
-    host = t.match.host
+    host = t.matchu.host
 	end)
   it("meta", function()
     assert.truthy(is)
     assert.truthy(is.callable(host))
   end)
   it("positive", function()
---    assert.equal('сайт.рф', host('сайт.рф'))
---    assert.equal('xxx.сайт.рф', host('xxx.сайт.рф'))
---    assert.equal('любой.сайт.рф', host('любой.сайт.рф'))
+    assert.equal('сайт.рф', host('сайт.рф'))
+    assert.equal('xxx.сайт.рф', host('xxx.сайт.рф'))
+    assert.equal('любой.сайт.рф', host('любой.сайт.рф'))
 
     assert.equal('x.com', host('x.com'))
     assert.equal('xy.com', host('xy.com'))

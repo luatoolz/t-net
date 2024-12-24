@@ -3,16 +3,16 @@ describe("match.domain", function()
 	setup(function()
     t = require "t"
     is = t.is
-    domain = t.match.domain
+    domain = t.matchu.domain
 	end)
   it("meta", function()
     assert.truthy(is)
     assert.truthy(is.callable(domain))
   end)
   it("positive", function()
---    assert.equal('сайт.рф', domain('сайт.рф'))
---    assert.equal('xxx.сайт.рф', domain('xxx.сайт.рф'))
---    assert.equal('любой.сайт.рф', domain('любой.сайт.рф'))
+    assert.equal('сайт.рф', domain('сайт.рф'))
+    assert.equal('xxx.сайт.рф', domain('xxx.сайт.рф'))
+    assert.equal('любой.сайт.рф', domain('любой.сайт.рф'))
 
     assert.equal('x.com', domain('x.com'))
     assert.equal('xy.com', domain('xy.com'))

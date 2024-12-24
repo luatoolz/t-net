@@ -22,7 +22,9 @@ dependencies = {
   "public_suffix_list",
   "t",
   "t-env",
+  "t-utf8",
   "luaresolver",
+  "idn2",
 }
 
 test_dependencies = {

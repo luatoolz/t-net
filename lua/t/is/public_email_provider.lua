@@ -6284,6 +6284,7 @@ zzn.com
 zzom.co.uk
 zzz.com
 ]]
-local ok=email_providers:lower():tohash()
-local domain=t.net.domain
-return function(x) return ok[tostring(domain(x) or '')] end
+return setmetatable(email_providers:lower():tohash(), {
+__call = function(self, k) return k and rawget(self, tostring(k):lower()) end,
+__index = function(self, k) return self(k) end,
+})

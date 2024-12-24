@@ -1,9 +1,9 @@
-describe("host", function()
+describe("hostname", function()
 	local t, is, host, tld, ip
 	setup(function()
     t = require "t"
     is = t.is
-    host = t.net.host
+    host = t.net.hostname
     tld = t.net.tld
     ip = t.net.ip
 	end)
@@ -11,7 +11,7 @@ describe("host", function()
     assert.truthy(is)
     assert.truthy(is.callable(host))
 
-    assert.is_true(is.net.host(host('site.com.')))
+    assert.is_true(is.net.hostname(host('site.com.')))
     assert.is_table(host('site.com'))
     assert.is_table(getmetatable(host('site.com')))
   end)
@@ -42,8 +42,6 @@ describe("host", function()
     assert.equal('local', tostring(host('.local')))
     assert.equal('local', tostring(host('local')))
     assert.equal('type', tostring(host({'type'})))
-
-    assert.equal('8.8.8.8', tostring(host('8.8.8.8')))
   end)
   it("__eq", function()
     assert.equal(host('site.com'), host('site.com'))
@@ -53,8 +51,6 @@ describe("host", function()
     assert.equal(host('www.site.com'), host('site.com') .. 'www')
     assert.equal(host('www.site.com'), host('site.com') .. {'www'})
     assert.equal(host('1.1.1.1.in-addr.arpa'), host('in-addr.arpa') .. ip('1.1.1.1'))
-    assert.is_nil(host('8.8.8.8') .. 'www')
-    assert.is_nil(host(ip('8.8.8.8')) .. 'www')
   end)
   it(".tld", function()
     assert.equal(tld('com'), host('site.com').tld)
@@ -67,6 +63,8 @@ describe("host", function()
     assert.equal(tld('xxx.site.info'), host('xxx.site.info').tld)
   end)
   it("negative", function()
+    assert.is_nil(host('8.8.8.8'))
+    assert.is_nil(host(ip('8.8.8.8')))
     assert.is_nil(host('.'))
     assert.is_nil(host({}))
     assert.is_nil(host(0))

@@ -4,7 +4,7 @@ local pkg=t.pkg(...)
 local join, split, match, byte, mt, is, map, sub, append =
   string.joiner('.'),
   string.splitter('.'),
-  t.match,
+  t.matchu,
   t.number.byte,
   t.mt,
   t.is,
@@ -18,7 +18,9 @@ local tld, inet_ntoa, inet_aton, computed =
   pkg.inet_aton,
   mt.computed
 
-local domain, host, ip, dns = {}, {}, {}, {}
+local idn2 = require 'idn2'
+
+local domain, host, hostname, ip, dns = {}, {}, {}, {}, {}
 
 local function minus(i, n)
   if type(n)=='number' and n<0 and type(i)=='number' and i<0 then
@@ -68,7 +70,8 @@ setmetatable(domain,{
 __call=function(self, it)
   if mt(it)==mt(self) then return it end
   it=getnetobject(self, it)
-  it=match.domain(it)
+  it=match.idn(it) or match.domain(it)
+  if match.idn(it) then it=idn2.to_unicode(it) end
   if type(it)~='string' or #it==0 then return nil end
   local _,n=tld(it, true)
   local rv=split(it)
@@ -77,6 +80,8 @@ end,
 __computable = {
   tld     = function(self) return tld(self) end,
   islocal = function(self) return is.localdomain(self) end,
+  ispubmx = function(self) return is.public_email_provider(tostring(self)) and true or nil end,
+  idn     = function(self) return match.idn(idn2.to_ascii(tostring(self))) or nil end,
   ip      = function(self) return self.a end,
   a       = function(self) return dns.a(self) end,
   ns      = function(self) return dns.ns(self) end,
@@ -112,6 +117,28 @@ __name = 'net/host',
 __tostring = tpl.__tostring,
 })
 
+setmetatable(hostname,{
+__call=function(self, it)
+  if mt(it)==mt(self) then return it end
+  it=getnetobject(self, it)
+  return mt(split(match.host(it)), mt(self), true)
+end,
+__computable = {
+  tld     = function(self) return tld(self.domain) end,
+  domain  = function(self) return domain(self) end,
+  ip      = function(self) return self.a end,
+  a       = function(self) return dns.a(self) end,
+  ns      = function(self) return dns.ns(self) end,
+  mx      = function(self) return dns.mx(self) end,
+},
+__concat = tpl.__concat,
+__eq = tpl.__eq,
+__export = tpl.__export,
+__index = tpl.__index,
+__name = 'net/hostname',
+__tostring = tpl.__tostring,
+})
+
 setmetatable(ip, {
 __call=function(self, it)
   if getmetatable(it)==getmetatable(self) then return it end
@@ -134,6 +161,7 @@ __tostring = tpl.__tostring,
 return {
   domain=domain,
   host=host,
+  hostname=hostname,
   ip=ip,
   dns=dns,
 }
