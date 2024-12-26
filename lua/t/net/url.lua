@@ -7,13 +7,11 @@ url.options.legal_in_path["+"] = true
 local join, mt, match =
   string.joiner(''),
   t.mt,
-  t.matchu
+  t.match
 
 local domain, computed =
   pkg.domain,
   mt.computed
-
-local _ = match
 
 local port = setmetatable({
   https = '443',
@@ -40,8 +38,8 @@ __computable = {
   domain    = function(self) return tostring(domain(self.host)) end,
   scheme    = function(self) return self.authority:null() and 'https' end,
   port      = function(self) return port[self.scheme] end,
-  ascheme   = function(self) return self.scheme and '%s://'%self.scheme end,
   matches   = function(self) return port[self.scheme]==port[self.port] end,
+  ascheme   = function(self) return self.scheme and '%s://'%self.scheme end,
   aport     = function(self) return self.matches and '' or (':%s'%self.port) end,
 },
 __eq = function(a, b) return tostring(a)==tostring(b) end,
