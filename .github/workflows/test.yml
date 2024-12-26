@@ -18,12 +18,12 @@ jobs:
         luaVersion: ["5.1", "5.2", "5.3", "luajit", "luajit-openresty"]
     env:
       DEV: --dev
-      SYSDEPS:
+      SYSDEPS: libidn2-dev
       ROCKSPEC: ${{ github.event.repository.name }}-scm-0.rockspec
     steps:
     - uses: actions/checkout@master
     - name: system dependencies
-      run: sudo apt-get update -y && sudo apt-get upgrade -y ${{ env.SYSDEPS }}
+      run: sudo apt-get update -y && sudo apt-get install -y ${{ env.SYSDEPS }}
     - uses: jkl1337/gh-actions-lua@v11
       with:
         luaVersion: ${{ matrix.luaVersion }}
