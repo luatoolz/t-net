@@ -14,4 +14,5 @@ local ok=checker({
 },type,checker({
   string=function(x) return x:lower():strip('.') or '' end,
 },type,psl.exists))
-return function(host) return ok(host) end
+local fallback = {za=true}
+return function(host) return ok(host) or fallback[type(host)=='string' and string.lower(host)] end

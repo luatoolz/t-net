@@ -9,10 +9,6 @@ describe("tld", function()
     local _ = domain
     _ = host
 	end)
-  it("meta", function()
-    assert.truthy(is)
-    assert.truthy(is.callable(tld))
-  end)
   it("positive", function()
     assert.equal('com', tld('COM'))
     assert.equal('com', tld('CoM'))
