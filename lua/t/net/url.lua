@@ -45,6 +45,8 @@ __computable = {
 __eq = function(a, b) return tostring(a)==tostring(b) end,
 __export = function(self) return tostring(self) end,
 __index = computed,
+__mul = table.__mul,
+__mod = table.__mod,
 __name = 'net/url',
 __tostring = function(self) return join(self.ascheme, self.host, self.aport, self.path) end,
 })

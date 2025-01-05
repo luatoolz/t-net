@@ -39,6 +39,8 @@ __computable = {
 __eq = function(a, b) return tostring(a)==tostring(b) end,
 __export = function(self) return tostring(self) end,
 __index = mt.computed,
+__mul = table.__mul,
+__mod = table.__mod,
 __name = 'net/proxy',
 __tostring = function(self) return '%s://%s:%s' % self end,
 })
