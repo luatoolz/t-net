@@ -22,11 +22,13 @@ local port = setmetatable({
   [80] = '80',
 },{__index = function(self, k) return rawget(self, tostring(k):lower()) end,})
 
-return setmetatable({},{
+local this = {}
+return setmetatable(this,{
 __call=function(self, it)
   if mt(it)==mt(self) then return it end
   if type(it)~='string' then return nil end
-  it=tostring(it):trim():lower():strip("https://", "http://", "//", "www."):null()
+--  it=tostring(it):trim():lower():strip("https://", "http://", "//", "www."):null()
+  it=self.short(it)
   if not match.host(it) then return end
   it=it and url.parse(it:prefix("https://")):normalize()
   return it and mt(it, mt(self), true) or nil
@@ -48,5 +50,7 @@ __index = computed,
 __mul = table.__mul,
 __mod = table.__mod,
 __name = 'net/url',
+short = function(x) return x and tostring(x):trim():lower():strip("https://", "http://", "//", "www."):null() end,
+long  = function(x) return x and tostring(this(x)) end,
 __tostring = function(self) return join(self.ascheme, self.host, self.aport, self.path) end,
 })

@@ -93,6 +93,7 @@ __export = tpl.__export,
 __index = tpl.__index,
 __mul = table.__mul,
 __mod = table.__mod,
+normal = function(x) return x and tostring(domain(x)) end,
 __name = 'net/domain',
 __tostring = tpl.__tostring,
 })
