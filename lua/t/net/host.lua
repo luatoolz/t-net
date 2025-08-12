@@ -1,4 +1,4 @@
-local t=t or require "t"
+local t=require 't'
 local pkg=t.pkg(...)
 local tpl=pkg.tpl
 local _ = pkg.dns

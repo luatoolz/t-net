@@ -1,4 +1,4 @@
-local t=t or require "t"
+local t=require 't'
 local pkgn=...
 local pkg=t.pkg(pkgn)
 local url = require "net.url"
@@ -41,14 +41,14 @@ __computable = {
   scheme    = function(self) return self.authority:null() and 'https' end,
   port      = function(self) return port[self.scheme] end,
   matches   = function(self) return port[self.scheme]==port[self.port] end,
-  ascheme   = function(self) return self.scheme and '%s://'%self.scheme end,
-  aport     = function(self) return self.matches and '' or (':%s'%self.port) end,
+  ascheme   = function(self) return self.scheme and '%s://'^self.scheme end,
+  aport     = function(self) return self.matches and '' or (':%s'^self.port) end,
 },
 __eq = function(a, b) return tostring(a)==tostring(b) end,
 __export = function(self) return tostring(self) end,
 __index = computed,
-__mul = table.__mul,
-__mod = table.__mod,
+__mul = table.map,
+__mod = table.filter,
 __name = 'net/url',
 short = function(x) return x and tostring(x):trim():lower():strip("https://", "http://", "//", "www."):null() end,
 long  = function(x) return x and tostring(this(x)) end,

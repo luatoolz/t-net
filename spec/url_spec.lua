@@ -16,7 +16,6 @@ describe("url", function()
     assert.equal("https://foo.com", url.long('https://foo.com'))
 
     local u = url("https://www.FOO.com///foo/../foo/./bar")
---    assert.equal("com", u.tld)
     assert.equal("foo.com", u.domain)
     assert.equal("https", u.scheme)
     assert.equal("https://foo.com/foo/bar", tostring(u))

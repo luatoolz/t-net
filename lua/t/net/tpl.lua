@@ -1,10 +1,10 @@
-local t=t or require "t"
+local t=require 't'
 local pkg=t.pkg(...)
-
-local join, split, match, byte, mt, is, map, sub, append =
+local join, split, match, number, byte, mt, is, map, sub, append =
   string.joiner('.'),
   string.splitter('.'),
   t.matchu,
+  t.number,
   t.number.byte,
   t.mt,
   t.is,
@@ -18,23 +18,29 @@ local tld, inet_ntoa, inet_aton, computed =
   pkg.inet_aton,
   mt.computed
 
-local idn2 = require 'idn2'
+local index, interval = table.index, table.interval
+
+local idn2 = assert(require 'idn2', 'no idn2')
 
 local domain, host, hostname, ip, dns = {}, {}, {}, {}, {}
 
-local function minus(i, n)
-  if type(n)=='number' and n<0 and type(i)=='number' and i<0 then
-    if (n+i)>0 then
-      return (n+1)+i
-    end
-  end
-  return i
-end
+_ = computed
+_ = index
+_ = interval
+
+--local function minus(i, n)
+--  if type(n)=='number' and n<0 and type(i)=='number' and i<0 then
+--    if (n+i)>0 then
+--      return (n+1)+i
+--    end
+--  end
+--  return i
+--end
 local function pkgn(x, alt) return mt(x).__name or alt or 'unknown' end
 
 local tpl = {
 __concat=function(self, it)
-  if (not is.ip(self)) and #self>0 then
+  if (not is.net.ip(self)) and #self>0 then
     if type(it)=='string' and #it>0 then return host(append(sub(self), it, 1)) end
     if type(it)=='table' and #it>0 then
       local rv=sub(self)
@@ -45,7 +51,9 @@ __concat=function(self, it)
 end,
 __eq = function(a, b) return tostring(a)==tostring(b) end,
 __export = function(self) if #self>0 then return tostring(self) end end,
-__index = function(self, k) return rawget(self, minus(k, #self)) or computed(self, k) end,
+__index = function(self, k) return index(self, k) or
+                            interval(self, k) or computed(self, k) end,
+--__iter = function(self) return function() return self end end,
 __tostring = function(self) return #self>0 and string.lower(join(self)) or '' end,
 }
 
@@ -79,8 +87,8 @@ __call=function(self, it)
 end,
 __computable = {
   tld     = function(self) return tld(self) end,
-  islocal = function(self) return is.localdomain(self) end,
-  ispubmx = function(self) return is.public_email_provider(tostring(self)) and true or nil end,
+  islocal = function(self) return is.net.localdomain(self) end,
+  ispubmx = function(self) return is.net.public_email_provider(tostring(self)) and true or nil end,
   idn     = function(self) return match.idn(idn2.to_ascii(tostring(self))) or nil end,
   ip      = function(self) return self.a end,
   a       = function(self) return dns.a(self) end,
@@ -91,8 +99,8 @@ __concat = tpl.__concat,
 __eq = tpl.__eq,
 __export = tpl.__export,
 __index = tpl.__index,
-__mul = table.__mul,
-__mod = table.__mod,
+__mul = table.map,
+__mod = table.filter,
 normal = function(x) return x and tostring(domain(x)) end,
 __name = 'net/domain',
 __tostring = tpl.__tostring,
@@ -116,8 +124,8 @@ __concat = tpl.__concat,
 __eq = tpl.__eq,
 __export = tpl.__export,
 __index = tpl.__index,
-__mul = table.__mul,
-__mod = table.__mod,
+__mul = table.map,
+__mod = table.filter,
 __name = 'net/host',
 __tostring = tpl.__tostring,
 })
@@ -140,8 +148,8 @@ __concat = tpl.__concat,
 __eq = tpl.__eq,
 __export = tpl.__export,
 __index = tpl.__index,
-__mul = table.__mul,
-__mod = table.__mod,
+__mul = table.map,
+__mod = table.filter,
 __name = 'net/hostname',
 __tostring = tpl.__tostring,
 })
@@ -150,19 +158,22 @@ setmetatable(ip, {
 __call=function(self, it)
   if getmetatable(it)==getmetatable(self) then return it end
   if type(it)=='number' then it=inet_ntoa(it) end
-  if type(it)=='table' and #it==4 and #(map(it, byte) or {})==4 then return setmetatable(it, getmetatable(self)) end
+  if type(it)=='table' and #it==4 and #(map(it, byte) or {})==4 then
+    return setmetatable(it, getmetatable(self)) end
   it=getnetobject(self, it)
-  local rv=match.ip(it)
-  if type(rv)~='string' or #rv==0 then return pkgn(self):error('empty match') end
-  return mt(it:split('.'), getmetatable(self))
+  local rv = match.ip(it)
+  return rv and mt(rv:split('.'), getmetatable(self))
 end,
 __concat = tpl.__concat,
 __eq = tpl.__eq,
 __export = tpl.__export,
 __index = tpl.__index,
+__iter = tpl.__iter,
+__le = function(a, b) return number(a) <= number(b) end,
+__lt = function(a, b) return number(a) < number(b) end,
 __name = 'net/ip',
-__mul = table.__mul,
-__mod = table.__mod,
+__mul = table.map,
+__mod = table.filter,
 __tonumber=inet_aton,
 __tostring = tpl.__tostring,
 })

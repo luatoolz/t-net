@@ -1,4 +1,4 @@
-local t=t or require "t"
+local t=require 't'
 local is=t.is
 local has=is.has
 local checker=t.checker
@@ -22,7 +22,7 @@ return function(host, need)
   local i
   while n>0 do
     local new=join(table.sub(it, n))
-    if is.tld(new) then
+    if is.net.tld(new) then
       rv=new
       i=(i or 0)+1
     else

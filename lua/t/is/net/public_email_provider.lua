@@ -1,4 +1,4 @@
-local t=t or require "t"
+local t=require 't'
 local email_providers = [[
 007addict.com
 020.co.uk
@@ -6285,6 +6285,6 @@ zzom.co.uk
 zzz.com
 ]]
 return setmetatable(email_providers:lower():tohash(), {
-__call = function(self, k) return k and rawget(self, tostring(k):lower()) end,
+__call = function(self, k) return k and rawget(self, tostring(k):lower()) or nil end,
 __index = function(self, k) return self(k) end,
 })

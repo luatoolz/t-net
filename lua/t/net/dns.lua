@@ -1,4 +1,4 @@
-local t=t or require "t"
+local t=require 't'
 local is=t.is
 local pkgn=...
 local pkg=t.pkg(pkgn)
@@ -9,7 +9,7 @@ local Resolver, Parser =
 local recordTypes = Parser.recordTypes
 local save = table.save
 local nulled = table.nulled
-local to = t.to
+local number = t.number
 local env = t.env
 
 env({
@@ -32,18 +32,18 @@ local result = {
   PTR = host,
 }
 local queryf = {
-  PTR = function(x) if is.ip(x) then
+  PTR = function(x) if is.net.ip(x) then
     return host('in-addr.arpa')..ip(x) end
     return host(x) end,
 }
 
-local r=Resolver.new(ns, to.integer(env.NS_TIMEOUT))
+local r=Resolver.new(ns, number.integer(env.NS_TIMEOUT))
 return setmetatable(dns, {
-__call=function(self, it, k)
+__call=function(self, it, k) if it and k then
   k=k and self[k]
   if not k then return pkgn:error('bad dns query type') end
   return k(it)
-end,
+end end,
 __index=function(this, k)
   k=k and type(k)=='string' and recordTypes[string.upper(k)]
   k=k and type(k)=='number' and recordTypes[k]

@@ -1,5 +1,5 @@
 local psl=require "public_suffix_list"
-local t=t or require "t"
+local t=require 't'
 local is=t.is
 local has=is.has
 local checker=t.checker

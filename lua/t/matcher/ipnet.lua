@@ -1,4 +1,4 @@
-local t=t or require "t"
+local t=require 't'
 local tonum=function(x) return tonumber(x, 10) end
 local byte=t.number.byte
 local array=t.array

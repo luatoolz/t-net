@@ -1,14 +1,14 @@
-local t=t or require "t"
-local tonum=function(x) return tonumber(x) end
+local t=require 't'
+local tonum=function(x) return tonumber(x or nil) end
 local byte=t.number.byte
 local array=t.array
 local pak=table.pack
 local pat='([%w%p]?%d+)%.(%d+)%.(%d+)%.(%d+)(/?%d*%.?%d*%.?%d*%.?%d*)'
 local ok={['']=true,['/32']=true,['/255.255.255.255']=true}
-return function(x)
-  x=tostring(x)
+return function(x) if type(x)=='nil' then return x end
+  x=tostring(x or nil)
   local nums=array(pak(string.match(x, pat)))
-  if type(nums[5])=='nil' or ok[nums[5]] then nums[5]=nil end
+  if type(nums[5] or nil)=='nil' or ok[nums[5]] then nums[5]=nil end
   if #nums~=4 then return nil end
   nums=(nums*tonum)*byte
   return #nums==4 and table.concat(nums, '.') or nil

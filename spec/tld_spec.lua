@@ -1,7 +1,7 @@
 describe("tld", function()
   local t, tld, domain, host
   setup(function()
-    t = require "t"
+    t = require 't'
     tld = t.net.tld
     domain = t.net.domain
     host = t.net.host

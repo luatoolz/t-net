@@ -1,4 +1,4 @@
-local t = require "t"
+local t = require 't'
 local join=string.joiner('.')
 
 local mn = 256 -- 1 byte

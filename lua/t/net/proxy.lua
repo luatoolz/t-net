@@ -1,10 +1,10 @@
-local t=require "t"
-local to, mt, match =
-  t.to,
+local t=require 't'
+local number, mt, iter, match = t.number,
   t.mt,
+  t.iter,
   t.match
 
-local proto = t.set('socks','socks4','socks5','socks5h','http','https')
+local proto = t.set('socks','socks4','socks5','socks5a','socks5h','http','https')
 
 return setmetatable({},{
 __call=function(self, ...)
@@ -22,11 +22,12 @@ __call=function(self, ...)
     return nil
   elseif not new then
     local rv={}
-    for v in table.ivalues(it) do table.insert(rv, v) end
+    for v in iter.ivalues(it) do table.insert(rv, v) end
     it=rv
   end
+
   local scheme, ip, port = table.unpack(it)
-  if proto[scheme] and match.ip(ip) and to.integer(port) then
+  if proto[scheme] and match.ip(tostring(ip)) and number.integer(port) then
     return mt(it, mt(self), true)
   end
 end,
@@ -39,8 +40,8 @@ __computable = {
 __eq = function(a, b) return tostring(a)==tostring(b) end,
 __export = function(self) return tostring(self) end,
 __index = mt.computed,
-__mul = table.__mul,
-__mod = table.__mod,
+__mul = table.map,
+__mod = table.filter,
 __name = 'net/proxy',
-__tostring = function(self) return '%s://%s:%s' % self end,
+__tostring = function(self) return '%s://%s:%d' ^ {self[1],self[2],self[3]} end,
 })

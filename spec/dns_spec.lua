@@ -1,5 +1,5 @@
 describe("dns", function()
-	local t, is, dns, host, tld, domain, ip, ips
+	local t, is, dns, host, tld, domain, ip, ips, array
 	setup(function()
     t = require "t"
     is = t.is
@@ -9,6 +9,8 @@ describe("dns", function()
     domain = t.net.domain
     ip = t.net.ip
     ips = t.net.ips
+    array = t.array
+    _ = array
 	end)
   it("meta", function()
     assert.truthy(is)
@@ -22,7 +24,9 @@ describe("dns", function()
     assert.equal(dns.a, dns.A)
   end)
   it("positive", function()
-    assert.equal(t.set({ip('34.226.36.51'),ip('34.211.108.46'),ip('13.113.196.52'),ip('35.176.92.19')}), t.set(dns('site.com.', 'A')))
+--    assert.equal("{ip('34.226.36.51'),ip('34.211.108.46'),ip('13.113.196.52'),ip('35.176.92.19')}", getmetatable(dns('site.com.', 'A')))
+    assert.equal(table.sorted(array({ip('34.226.36.51'),ip('34.211.108.46'),ip('13.113.196.52'),ip('35.176.92.19')})), table.sorted(dns('site.com.', 'A')))
+
     assert.values({'34.226.36.51','34.211.108.46','13.113.196.52','35.176.92.19'}, dns('site.com.', 'A')*tostring)
     assert.values({'34.226.36.51','34.211.108.46','13.113.196.52','35.176.92.19'}, dns.a('site.com.')*tostring)
     assert.values({'34.226.36.51','34.211.108.46','13.113.196.52','35.176.92.19'}, dns.A('site.com.')*tostring)

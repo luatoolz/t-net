@@ -1,4 +1,4 @@
-local t=require "t"
+local t=require 't'
 local mt, match =
   t.mt,
   t.matchu
@@ -39,8 +39,8 @@ __call=function(self, ...)
 end,
 __eq = function(a, b) return tostring(a)==tostring(b) end,
 __export = function(self) return tostring(self) end,
-__mul = table.__mul,
-__mod = table.__mod,
+__mul = table.map,
+__mod = table.filter,
 __name = 'net/email',
-__tostring = function(self) return '%s@%s' % {self.login, self.domain} end,
+__tostring = function(self) return '%s@%s' ^ {self.login, self.domain} end,
 })

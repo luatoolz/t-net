@@ -3,7 +3,7 @@ describe("match.idn", function()
 	setup(function()
     t = require "t"
     is = t.is
-    idn = is.idn
+    idn = is.net.idn
 	end)
   it("meta", function()
     assert.truthy(is)
